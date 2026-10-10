@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Cursor Test</title>
+
+<style>
+:root {
+    --blue: #1769ff;
+    --bg: #f4f7fc;
+    --card: #ffffff;
+    --text: #18233a;
+    --muted: #66738a;
+    --border: #e1e8f3;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background .3s, color .3s;
+}
+
+/* HEADER */
+header {
+    background: linear-gradient(120deg, #1056ed, #1979ff, #536bff);
+    color: white;
+    text-align: center;
+    padding: 38px 20px;
+}
+
+header h1 {
+    margin: 0 0 12px;
+    font-size: clamp(28px, 4vw, 46px);
+    letter-spacing: -1px;
+}
+
+header p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* MAIN CONTENT */
+main {
+    width: min(1200px, 94%);
+    margin: 30px auto;
+    flex: 1;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.toolbar h2 {
+    margin: 0 0 5px;
+}
+
+.subtitle {
+    color: var(--muted);
+    margin: 0;
+    font-size: 14px;
+}
+
+button {
+    font: inherit;
+}
+
+.theme-toggle {
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    border-radius: 25px;
+    background: var(--card);
+    color: var(--text);
+    cursor: pointer;
+}
+
+/* CURSOR GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.cursor-card {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 17px 14px;
+    min-height: 85px;
+    text-align: left;
+    transition: .2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.cursor-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--blue);
+    box-shadow: 0 10px 25px rgba(23, 105, 255, .12);
+}
+
+.cursor-card strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.cursor-card small {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.cursor-card.selected {
+    outline: 2px solid var(--blue);
+}
+
+/* BUTTONS */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 22px 0;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: 12px 18px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    color: var(--text);
+    cursor: pointer;
+    transition: .2s;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--blue);
+}
+
+.primary {
+    background: var(--blue);
+    color: white;
+    border-color: var(--blue);
+}
+
+/* STATUS PANEL */
+.status {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 20px;
+}
+
+.status h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+}
+
+.status p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+code {
+    color: var(--blue);
+    font-weight: bold;
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 25px 15px;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.socials {
+    margin: 12px 0;
+}
+
+.socials a {
+    display: inline-block;
+    padding: 9px 12px;
+    margin: 0 4px;
+    background: #e7efff;
+    color: var(--blue);
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* DARK MODE */
+body.dark {
+    --bg: #0d1423;
+    --card: #141e31;
+    --text: #edf3ff;
+    --muted: #9baac2;
+    --border: #293650;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    main {
+        width: 92%;
+    }
+
+    header {
+        padding: 30px 15px;
+    }
+}
+
+@media (max-width: 350px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Interactive Cursor Test</h1>
+    <p>Hover over the blocks to explore different cursor styles in action!</p>
+</header>
+
+<main>
+
+    <div class="toolbar">
+        <div>
+            <h2>✣ Cursor Collection</h2>
+            <p class="subtitle">
+                Explore CSS cursor styles and test how they behave.
+            </p>
+        </div>
+
+        <button class="theme-toggle" id="themeToggle">
+            ☾ Toggle Dark Mode
+        </button>
+    </div>
+
+    <section class="grid" id="cursorGrid"></section>
+
+    <div class="actions">
+        <button class="action-btn" id="zoomOut">− Zoom Out</button>
+        <button class="action-btn primary" id="zoomIn">＋ Zoom In</button>
+        <button class="action-btn" id="reset">↺ Reset</button>
+    </div>
+
+    <section class="status" aria-live="polite">
+        <h3 id="statusTitle">Ready to explore</h3>
+        <p id="statusText">
+            Hover over a tile to preview its cursor.
+            Click a tile to select its style.
+        </p>
+    </section>
+
+</main>
+
+<footer>
+    <div>Made for curious clicks ✦</div>
+
+    <div class="socials">
+        <a href="https://github.com/" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/" target="_blank">LinkedIn</a>
+    </div>
+
+    <div>
+        © <span id="year"></span> Cursor Lab.
+        Built with HTML, CSS and JavaScript.
+    </div>
+</footer>
+
+<script>
+const cursorStyles = [
+    ["alias", "Alternate text cursor"],
+    ["all-scroll", "Move in any direction"],
+    ["auto", "Browser default"],
+    ["cell", "Spreadsheet cell"],
+    ["col-resize", "Resize a column"],
+    ["context-menu", "Context menu available"],
+    ["copy", "Copy an item"],
+    ["crosshair", "Precision selection"],
+    ["default", "Standard arrow"],
+    ["e-resize", "Resize east"],
+    ["ew-resize", "Resize horizontally"],
+    ["grab", "Ready to grab"],
+    ["grabbing", "Currently grabbing"],
+    ["help", "Help available"],
+    ["move", "Move an object"],
+    ["n-resize", "Resize north"],
+    ["ne-resize", "Resize northeast"],
+    ["nesw-resize", "Resize diagonal"],
+    ["ns-resize", "Resize vertically"],
+    ["nw-resize", "Resize northwest"],
+    ["nwse-resize", "Resize diagonal"],
+    ["no-drop", "Drop not permitted"],
+    ["none", "Hide the cursor"],
+    ["not-allowed", "Action unavailable"],
+    ["pointer", "Clickable element"],
+    ["progress", "Working in background"],
+    ["row-resize", "Resize a row"],
+    ["s-resize", "Resize south"],
+    ["se-resize", "Resize southeast"],
+    ["sw-resize", "Resize southwest"],
+    ["text", "Select text"],
+    ["w-resize", "Resize west"],
+    ["wait", "Please wait"],
+    ["zoom-in", "Zoom in"],
+    ["zoom-out", "Zoom out"]
+];
+
+const grid = document.getElementById("cursorGrid");
+const statusTitle = document.getElementById("statusTitle");
+const statusText = document.getElementById("statusText");
+
+let selectedCursor = null;
+let zoom = 1;
+
+/* CREATE CURSOR CARDS */
+cursorStyles.forEach(([name, description]) => {
+    const card = document.createElement("button");
+
+    card.type = "button";
+    card.className = "cursor-card";
+    card.style.cursor = name;
+
+    const title = document.createElement("strong");
+    title.textContent = name;
+
+    const details = document.createElement("small");
+    details.textContent = description;
+
+    card.appendChild(title);
+    card.appendChild(details);
+
+    card.addEventListener("mouseenter", () => {
+        if (!selectedCursor) {
+            statusTitle.textContent = "Previewing: " + name;
+            statusText.innerHTML =
+                'CSS value: <code>cursor: ' +
+                name +
+                ';</code> — ' +
+                description;
+        }
+    });
+
+    card.addEventListener("mouseleave", () => {
+        if (!selectedCursor) {
+            statusTitle.textContent = "Ready to explore";
+            statusText.textContent =
+                "Hover over a tile to preview its cursor. " +
+                "Click a tile to select its style.";
+        }
+    });
+
+    card.addEventListener("click", () => {
+        document.querySelectorAll(".cursor-card").forEach(item => {
+            item.classList.remove("selected");
+        });
+
+        if (selectedCursor === name) {
+            selectedCursor = null;
+            statusTitle.textContent = "Selection cleared";
+            statusText.textContent =
+                "Hover over a tile to preview its cursor.";
+        } else {
+            selectedCursor = name;
+            card.classList.add("selected");
+
+            statusTitle.textContent = "Selected: " + name;
+            statusText.innerHTML =
+                'CSS value: <code>cursor: ' +
+                name +
+                ';</code> — ' +
+                description;
+        }
+    });
+
+    grid.appendChild(card);
+});
+
+/* DARK MODE */
+document.getElementById("themeToggle").addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+
+    const isDark = document.body.classList.contains("dark");
+
+    document.getElementById("themeToggle").textContent =
+        isDark ? "☀ Toggle Light Mode" : "☾ Toggle Dark Mode";
+});
+
+/* ZOOM CONTROLS */
+function applyZoom() {
+    grid.style.zoom = zoom;
+}
+
+document.getElementById("zoomIn").addEventListener("click", () => {
+    zoom = Math.min(1.5, +(zoom + 0.1).toFixed(2));
+    applyZoom();
+});
+
+document.getElementById("zoomOut").addEventListener("click", () => {
+    zoom = Math.max(0.6, +(zoom - 0.1).toFixed(2));
+    applyZoom();
+});
+
+/* RESET */
+function resetPage() {
+    selectedCursor = null;
+    zoom = 1;
+    applyZoom();
+
+    document.querySelectorAll(".cursor-card").forEach(card => {
+        card.classList.remove("selected");
+    });
+
+    statusTitle.textContent = "Ready to explore";
+    statusText.textContent =
+        "Hover over a tile to preview its cursor. " +
+        "Click a tile to select its style.";
+}
+
+document.getElementById("reset").addEventListener("click", resetPage);
+
+/* ESCAPE KEY */
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+        resetPage();
+    }
+});
+
+/* AUTOMATIC COPYRIGHT YEAR */
+document.getElementById("year").textContent =
+    new Date().getFullYear();
+</script>
+
+</body>
+</html>
